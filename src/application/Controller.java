@@ -1,14 +1,22 @@
 package application;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 public class Controller {
@@ -28,9 +36,11 @@ public class Controller {
     private Label fileCheckerLabel;
     @FXML
     private Label sendingCheckerLabel;
+    @FXML
+    private ImageView refreshImage;
 
     @FXML
-    public void ChooseFile(ActionEvent event) throws IOException {
+    void ChooseFile(ActionEvent event) throws IOException {
     	FileChooser fs = new FileChooser();      
         fs.getExtensionFilters().addAll(
         		new FileChooser.ExtensionFilter("Всі файли", "*.*"));
@@ -39,16 +49,59 @@ public class Controller {
     	 filePathLabel.setText(choosedFile.getAbsolutePath());
     	 fileCheckerLabel.setText("File successfully chosed!");
      } else {
-    	 fileCheckerLabel.setText("Something went wrong!");
+    	 fileCheckerLabel.setText("Please choose file!");
      }
     }
     
     @FXML
-    public void SendFile() {
-    	//TODO: sending file on server
+    void SendFile() throws Exception {
+    	//Server URL!!!
+    	String urlToConnect = "http://...";
+
+    	URLConnection connection = new URL(urlToConnect).openConnection();
+    	connection.setDoOutput(true); // This sets request method to POST.
+    	connection.setRequestProperty("Content-Type", "multipart/form-data;");
+    	PrintWriter writer = null;
+    	try {
+    	    writer = new PrintWriter(new OutputStreamWriter(connection.getOutputStream()));
+    	    writer.println("Content-Disposition: form-data; name=\"file\"; filename=\""+ choosedFile.getName() +"\"");
+    	    writer.println("Content-Type: file/" + choosedFile.getName().substring(choosedFile.getName().lastIndexOf(".")));
+    	    writer.println();
+    	    BufferedReader reader = null;
+    	    try {
+    	        reader = new BufferedReader( new InputStreamReader( new FileInputStream(choosedFile)));
+    	        for (String line; (line = reader.readLine()) != null;) {
+    	            writer.println(line);
+    	        }
+    	    } finally {
+    	        if (reader != null) try { reader.close(); } catch (IOException logOrIgnore) {}
+    	    }
+    	} finally {
+    	    if (writer != null) writer.close();
+    	}
+
+    	// Connection is lazily executed whenever you request any status.
+    	int responseCode = ((HttpURLConnection) connection).getResponseCode();
+    	
+    	if(responseCode == 200) {
+    		sendingCheckerLabel.setText("File successfully sent!");
+    	}else {
+    		sendingCheckerLabel.setText("Problems with connection!");
+    		System.out.println(responseCode);
+    	}
     }
+    
+    @FXML
+    void RefreshFields() {
+    	choosedFile = null;
+    	filePathLabel.setText(" ");
+    	fileCheckerLabel.setText(" ");
+    	sendingCheckerLabel.setText(" ");
+    }
+    
     @FXML
     void initialize() {
+    	assert refreshImage != null : "fx:id=\"filePathLabel\" was not injected: check your FXML file 'view.fxml'.";
         assert filePathLabel != null : "fx:id=\"filePathLabel\" was not injected: check your FXML file 'view.fxml'.";
         assert openFileButton != null : "fx:id=\"openFileButton\" was not injected: check your FXML file 'view.fxml'.";
         assert fileCheckerLabel != null : "fx:id=\"fileCheckerLabel\" was not injected: check your FXML file 'view.fxml'.";
