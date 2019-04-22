@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="360.0" prefWidth="815.0" style="-fx-background-color: #3049e9;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <children>
+      <Button fx:id="openFileButton" layoutX="41.0" layoutY="174.0" mnemonicParsing="false" onAction="#ChooseFile" prefHeight="44.0" prefWidth="197.0" style="-fx-background-color: #2132a1;" text="Open file" textFill="#e2f821">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Label fx:id="filePathLabel" layoutX="41.0" layoutY="103.0" prefHeight="44.0" prefWidth="734.0" text=" " textFill="#e2f821">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="fileCheckerLabel" layoutX="308.0" layoutY="174.0" prefHeight="44.0" prefWidth="254.0" text=" " textFill="#e2f821">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font></Label>
+      <Button fx:id="sendFileButton" layoutX="41.0" layoutY="246.0" mnemonicParsing="false" onAction="#SendFile" prefHeight="44.0" prefWidth="197.0" style="-fx-background-color: #2132a1;" text="Send file" textAlignment="JUSTIFY" textFill="#e2f821">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Label fx:id="sendingCheckerLabel" layoutX="308.0" layoutY="246.0" prefHeight="44.0" prefWidth="254.0" text=" " textFill="#e2f821">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font></Label>
+      <Label layoutX="143.0" layoutY="39.0" prefHeight="44.0" prefWidth="530.0" text="  Choose your file for sending on server" textFill="#d9cd04">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
